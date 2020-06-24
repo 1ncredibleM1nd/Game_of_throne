@@ -4,13 +4,15 @@ import Header from '../header';
 import RandomChar from '../randomChar';
 import ItemList from '../itemList';
 import CharDetails from '../charDetails';
+import Error from "../errorMessage";
 
 
 export default  class App extends Component{
     
     state={
         isActive:true,
-        selectedChar:null
+        selectedChar:null,
+        error:false
 };
     onToggle=()=>{
         this.setState((state)=>{
@@ -21,13 +23,24 @@ export default  class App extends Component{
         })
     }
     ;
+    onCharSelected =(id)=>{
+        this.setState({selectedChar:id})
+        
+    };
     
-    
+    componentDidCatch(error, errorInfo) {
+        console.log('error');
+        this.setState({
+            error:true
+        });
+    }
     
     render() {
         
         const char = this.state.isActive ?<RandomChar/> :null;
-        
+        if(this.state.error){
+            return <Error/>
+        }
         
         return (
             <>
@@ -48,10 +61,10 @@ export default  class App extends Component{
                             <button className="btn btn-bg btn-danger mb-5 " onClick={this.onToggle}>Toggle</button>
                         </Col>
                         <Col md='5'>
-                            <ItemList/>
+                            <ItemList onCharSelected={this.onCharSelected}/>
                         </Col>
                         <Col md='5'>
-                            <CharDetails/>
+                            <CharDetails charId={this.state.selectedChar}/>
                         </Col>
                     </Row>
                 </Container>
