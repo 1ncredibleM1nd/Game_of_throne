@@ -3,17 +3,20 @@ import {Col,Row,Container} from 'reactstrap'
 import ItemList from "../itemList";
 import CharDetails from "../charDetails";
 import Error from "../errorMessage";
+import gotService from "../../services/gotService";
+import RowBlock from "../rowBlock";
 
 
 export default class CharacterPage extends Component{
-	
-	state={
-		selectedChar:130,
-		error:false
+	gotService= new gotService();
+	state = {
+		selectedChar: null,
+		error: false
 	};
-	onCharSelected =(id)=>{
-		this.setState({selectedChar:id})
-		
+	onItemSelected = (id) => {
+		this.setState({
+			selectedChar: id
+		})
 	};
 	componentDidCatch(error, errorInfo) {
 		this.setState({
@@ -25,16 +28,16 @@ export default class CharacterPage extends Component{
 		if(this.state.error){
 			return <Error/>
 		}
-		return(
-			<Row>
-				<Col md='5'>
-					<ItemList onCharSelected={this.onCharSelected}/>
-				</Col>
-				<Col md='5'>
-					<CharDetails charId={this.state.selectedChar}/>
-				</Col>
 		
-			</Row>
+		const itemList = (<ItemList
+			onItemSelected={this.onItemSelected}
+			getData={this.gotService.getAllCharacters}
+			renderItem={({name,gender})=>`${name}(${gender})`}
+		/>);
+		
+		const charDetails = (<CharDetails charId={this.state.selectedChar}/>);
+		return(
+			<RowBlock left={itemList} right={charDetails}/>
 		)
 	}
 }

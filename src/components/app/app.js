@@ -2,15 +2,16 @@ import React, {Component} from 'react';
 import {Col, Row, Container} from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import ItemList from '../itemList';
-import CharDetails from '../charDetails';
 import Error from "../errorMessage";
 import CharacterPage from "../charPage";
+import ItemList from "../itemList";
+import CharDetails from "../charDetails";
+import GotService from "../../services/gotService";
 
 
 
 export default  class App extends Component{
-    
+    gotService = new GotService();
     state={
         isActive:true,
         error:false
@@ -61,6 +62,30 @@ export default  class App extends Component{
                      
                     </Row>
                     <CharacterPage/>
+                    <Row>
+                        <Col md='5'>
+                            <ItemList onCharSelected={this.onCharSelected}
+                            getData={this.gotService.getAllBooks}
+                                      renderItem={(item)=>item.name}/>
+                        </Col>
+                        <Col md='5'>
+                            <CharDetails charId={this.state.selectedChar}/>
+                        </Col>
+                    
+                    </Row>
+                    <Row className="mt-5">
+                        <Col md='5'>
+                            <ItemList
+                                onCharSelected={this.onCharSelected}
+                            getData={this.gotService.getAllHouses}
+                                renderItem={(item)=>item.name}/>
+                        
+                        </Col>
+                        <Col md='5'>
+                            <CharDetails charId={this.state.selectedChar}/>
+                        </Col>
+                    
+                    </Row>
                 </Container>
             </>
         );
